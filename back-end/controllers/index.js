@@ -1,14 +1,16 @@
 const user = require("./user");
 const book = require("./book");
 const auth = require("./auth");
-const review = require("./review");
+const feedback = require("./feedback");
+const favorite = require("./favorite");
 const checkAuthorization = require("./middleware").checkAuthorization;
 
 const controller = {
   user,
   book,
   auth,
-  review,
+  feedback,
+  favorite,
   checkAuthorization,
 };
 

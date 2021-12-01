@@ -8,7 +8,7 @@ const app = express();
 const PORT = utils.PORT;
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: true, credentials: true }));
 
 app.listen(PORT, () => {
   console.log("Server is running on port " + PORT);
