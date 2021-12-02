@@ -1,29 +1,7 @@
 <template>
   <div class="container">
-    <div class="registerContainer">
+    <div class="loginContainer">
       <q-form @submit="onSubmit">
-        <q-input
-          v-model="firstName"
-          label="First Name"
-          class="inputField"
-          :rules="[
-            (val) => (val && val.length > 0) || 'Please type your first name',
-            (val) =>
-              (val && val.match(/^(?!-)(?!.*--)[A-Za-z-]+(?<!-)$/)) ||
-              'Invalid name',
-          ]"
-        />
-        <q-input
-          v-model="lastName"
-          label="Last Name"
-          class="inputField"
-          :rules="[
-            (val) => (val && val.length > 0) || 'Please type your last name',
-            (val) =>
-              (val && val.match(/^(?!-)(?!.*--)[A-Za-z-]+(?<!-)$/)) ||
-              'Invalid name',
-          ]"
-        />
         <q-input
           v-model="email"
           label="Email"
@@ -46,8 +24,8 @@
             (val) => (val.length > 6 && val.length < 30) || 'Invalid password',
           ]"
         />
-        <div class="registerButtonContainer">
-          <q-btn label="Register" type="submit" color="secondary" />
+        <div class="loginButtonContainer">
+          <q-btn label="Login" type="submit" color="secondary" />
         </div>
       </q-form>
     </div>
@@ -61,36 +39,46 @@ import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
 
 export default {
-  name: "Register",
+  name: "Login",
   setup() {
-    let firstName = ref("");
-    let lastName = ref("");
     let email = ref("");
     let password = ref("");
-    const $q = useQuasar();
+    let $q = useQuasar();
     const router = useRouter();
 
     function onSubmit() {
       axios
-        .post("http://localhost:8081/api/user/addUser", {
-          firstName: firstName.value,
-          lastName: lastName.value,
-          email: email.value,
-          password: password.value,
-        })
-        .then(() => {
+        .post(
+          "http://localhost:8081/api/auth/login",
+          { email: email.value, password: password.value },
+          { withCredentials: true }
+        )
+        .then((res) => {
           $q.notify({
             message: "Registration successfull",
             icon: "done",
             color: "green",
+            textColor: "white",
           });
-          router.push({ path: "/login" });
+          console.log(res.data);
+          //    localStorage.setItem(res.data.token);
+          localStorage.setItem("token", res.data.token);
+          router.push({ path: "/books" });
+          //   router.go();
+        })
+        .catch((err) => {
+          const errors = Object.values(err.response.data); //iau erorile din back
+          errors.map((item) => {
+            $q.notify({
+              color: "red-9",
+              textColor: "white",
+              icon: "warning",
+              message: item,
+            });
+          });
         });
     }
-
     return {
-      firstName,
-      lastName,
       email,
       password,
       onSubmit,
@@ -105,14 +93,14 @@ export default {
   height: 80vh;
 }
 
-.registerContainer {
+.loginContainer {
   margin: auto;
-  max-width: 500px;
+  max-width: 400px;
   display: flex;
   justify-content: center;
   align-items: center;
   border: 1px solid black;
-  padding: 3%;
+  padding: 5% 3%;
   border-radius: 3%;
   border: 2px solid secondary;
 }
@@ -121,7 +109,7 @@ export default {
   width: 300px;
 }
 
-.registerButtonContainer {
+.loginButtonContainer {
   padding-top: 10%;
   display: flex;
   justify-content: center;

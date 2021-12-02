@@ -16,6 +16,7 @@
           @click="$router.push('/').catch((err) => {})"
         />
         <q-tab
+          v-if="!token"
           name="Register"
           label="Register"
           icon="app_registration"
@@ -24,6 +25,7 @@
           @click="$router.push('/register').catch((err) => {})"
         ></q-tab>
         <q-tab
+          v-if="!token"
           name="Login"
           label="Login"
           icon="login"
@@ -39,14 +41,15 @@
           clickable
           @click="$router.push('/books').catch((err) => {})"
         ></q-tab>
-        <!-- <q-tab
+        <q-tab
+          v-if="token"
           name="logout"
           label="Logout"
           icon="logout"
           class="tabsList"
           clickable
           @click="logout"
-        ></q-tab> -->
+        ></q-tab>
       </q-tabs>
     </q-header>
 
@@ -57,11 +60,15 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "MainLayout",
 
-  setup() {},
+  computed: {
+    token() {
+      return window.localStorage.getItem("token");
+    },
+  },
 });
 </script>
