@@ -43,6 +43,15 @@
         ></q-tab>
         <q-tab
           v-if="token"
+          name="Favorites"
+          label="Favorites"
+          icon="book"
+          class="tabsList"
+          clickable
+          @click="$router.push('/favorites').catch((err) => {})"
+        ></q-tab>
+        <q-tab
+          v-if="token"
           name="logout"
           label="Logout"
           icon="logout"
@@ -61,9 +70,23 @@
 
 <script>
 import { defineComponent } from "vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "MainLayout",
+
+  setup() {
+    const router = useRouter();
+
+    function logout() {
+      localStorage.clear();
+      router.push({ path: "/login" });
+    }
+    return {
+      logout,
+      router,
+    };
+  },
 
   computed: {
     token() {

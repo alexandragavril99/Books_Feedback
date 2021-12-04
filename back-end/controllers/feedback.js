@@ -4,7 +4,6 @@ const db = require("../config/db");
 const controller = {
   createFakeFeedback: async (req, res) => {
     const numberOfFeedbackPerBook = req.params.id;
-    console.log(numberOfFeedbackPerBook);
 
     try {
       const users = await db.collection("Users").get();
@@ -13,19 +12,14 @@ const controller = {
         userList.push(user.id);
       });
 
-      console.log(userList);
-
       const books = await db.collection("Books").get();
       let bookList = [];
       books.forEach((book) => {
         bookList.push(book.id);
       });
 
-      console.log(bookList);
-
       for (let i = 0; i < bookList.length; i++) {
         for (let j = 0; j < numberOfFeedbackPerBook; j++) {
-          console.log("here");
           let comment = faker.lorem.sentences(
             faker.datatype.number({ min: 1, max: 5 })
           );
@@ -38,7 +32,6 @@ const controller = {
             userId: id,
             bookId: bookList[i],
           });
-          console.log(res);
         }
       }
 
@@ -59,15 +52,22 @@ const controller = {
       if (feedbackSnapshot) {
         let feedbackList = [];
 
-        feedbackSnapshot.forEach((doc) => {
+        feedbackSnapshot.forEach(async (doc) => {
           let feedback = {};
           feedback.id = doc.id;
           feedback.comment = doc.data().comment;
           feedback.grade = doc.data().grade;
           feedback.userId = doc.data().userId;
-
           feedbackList.push(feedback);
         });
+
+        for (let item of feedbackList) {
+          const user = (
+            await db.collection("Users").doc(item.userId).get()
+          ).data();
+          item.userData = user;
+        }
+
         res.status(200).send(feedbackList);
       } else {
         res.status(401).send({ message: "This id does not exist." });
@@ -79,6 +79,7 @@ const controller = {
 
   createFeedback: async (req, res) => {
     try {
+      console.log(req.params.id);
       const bookId = req.params.id;
 
       let user = {};
@@ -101,6 +102,7 @@ const controller = {
       };
 
       if (!feedback.comment || !feedback.grade) {
+        console.log(feedback);
         res.status(400).send({ message: "Empty fields." });
       } else {
         await db.collection("Feedback").add(feedback);

@@ -45,6 +45,18 @@ const controller = {
       res.status(500).send(err);
     }
   },
+
+  getBookById: async (req, res) => {
+    try {
+      const bookId = req.params.id;
+
+      const book = (await db.collection("Books").doc(bookId).get()).data();
+
+      res.status(200).send(book);
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  },
 };
 
 module.exports = controller;

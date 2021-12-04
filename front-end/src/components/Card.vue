@@ -1,103 +1,129 @@
 <template>
   <div class="q-pa-md">
-    <q-dialog v-model="prompt" persistent>
-      <q-card style="min-width: 350px">
-        <q-card-section>
-          <div class="text-h6">Your address</div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          <q-input
-            dense
-            v-model="address"
-            autofocus
-            @keyup.enter="prompt = false"
-          />
-        </q-card-section>
-
-        <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Cancel" v-close-popup />
-          <q-btn flat label="Add address" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
-    <div class="my-card">
-      <q-card-section class="card">
-        <div class="flex flex-center" style="padding: 5px">
-          <div
-            style="margin: 0; text-align: center"
-            class="text-subtitle1 text-weight-medium"
-          >
-            {{ title }}
-          </div>
-        </div>
-        <div class="flex flex-center detailText">
-          <span>Author: {{ author }}</span>
-        </div>
-        <div class="flex flex-center detailText">
-          <span>Price: {{ price }} $</span>
-        </div>
-        <div class="flex flex-center detailText">
-          <span>Type: {{ type }}</span>
-        </div>
-
-        <q-card-section>
-          <div class="flex flex-center">
-            <q-btn class="bg-primary text-white" @click="openDialog()"
-              >View feedback</q-btn
-            >
-            <!-- <q-btn
-              class="bg-primary text-white"
-              @click="confirm = true"
-              style="margin-top: 5%"
-              >Modificare statut</q-btn
-            > -->
-          </div>
-        </q-card-section>
+    <q-card class="my-card bg-secondary text-white" style="text-align: center">
+      <q-card-section>
+        <div class="text-subtitle1 text-weight-medium">{{ title }}</div>
+        <div class="text-subtitle2" align="right">{{ author }}</div>
       </q-card-section>
-    </div>
+
+      <q-card-section class="card-section">
+        <span> Type: {{ type }} </span>
+        <br />
+        <span> Price: {{ price }} lei </span>
+      </q-card-section>
+
+      <q-separator dark />
+
+      <q-card-actions align="center" style="display: flex; flex-wrap: nowrap">
+        <q-btn flat @click="changePage()">View feedback</q-btn>
+        <q-btn v-if="fav" flat @click="deleteFromFavorites()"
+          >Delete from favorites</q-btn
+        >
+
+        <q-btn v-if="addFav" flat @click="addToFavorites()"
+          >Add to favorites</q-btn
+        >
+      </q-card-actions>
+    </q-card>
   </div>
 </template>
 
 <script>
+import { ref, defineComponent } from "vue";
+import { useRouter } from "vue-router";
 import axios from "axios";
-import { onMounted, ref, defineComponent } from "vue";
+import { useQuasar } from "quasar";
+
 export default defineComponent({
   name: "CardComponent",
-  props: ["id", "title", "author", "price", "type"],
-  setup(props) {
-    let prompt = ref(false);
+  props: ["id", "title", "author", "price", "type", "fav", "addFav"],
+  emits: ["removeBook"],
+
+  setup(props, { emit }) {
+    let $q = useQuasar();
+
     let address = ref("");
-    let feedback = ref([]);
     let bookId = ref(props.id);
+    const router = useRouter();
 
-    function openDialog() {
-      prompt.value = true;
+    let token = localStorage.getItem("token");
 
-      console.log(bookId.value);
+    function removeBook() {
+      emit("removeBook", {
+        id: bookId.value,
+      });
+    }
+
+    function changePage() {
+      router.push(`/feedback/${bookId.value}`);
+    }
+
+    function deleteFromFavorites() {
+      axios.defaults.headers.common["authorization"] =
+        localStorage.getItem("token");
       axios
-        .get(
-          `http://localhost:8081/api/feedback/getFeedbackPerBook/${bookId.value}`
+        .put(
+          `http://localhost:8081/api/favorite/removeBookFromFavorites/${bookId.value}`
         )
-        .then((response) => {
-          feedback.value = response.data;
-          console.log(feedback.value);
+        .then(() => {
+          $q.notify({
+            message: "Book deleted.",
+            icon: "done",
+            color: "green",
+            textColor: "white",
+          });
+
+          removeBook();
+        })
+        .catch((err) => {
+          console.log(err);
         });
+    }
+
+    function addToFavorites() {
+      if (token) {
+        axios.defaults.headers.common["authorization"] =
+          localStorage.getItem("token");
+        axios
+          .put(
+            `http://localhost:8081/api/favorite/addBookToFavorites/${props.id}`
+          )
+          .then(() => {
+            $q.notify({
+              message: "Book added to favorites.",
+              icon: "done",
+              color: "green",
+              textColor: "white",
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        $q.notify({
+          color: "red-9",
+          textColor: "white",
+          icon: "warning",
+          message: "You need to be logged in to add a book to favorites.",
+        });
+      }
     }
 
     return {
       bookId,
-      prompt,
       address,
-      openDialog,
+      changePage,
+      deleteFromFavorites,
+      removeBook,
+      addToFavorites,
+      token,
     };
   },
 });
 </script>
 
 <style scoped>
-.my-card {
+/* .my-card {
   width: 100%;
 }
 .card {
@@ -110,5 +136,15 @@ export default defineComponent({
 
 .detailText {
   padding: 5px;
+} */
+
+.my-card {
+  width: 100%;
+  max-width: 275px;
+  height: 235px;
+}
+
+.card-section {
+  padding: 0 0 5% 0;
 }
 </style>

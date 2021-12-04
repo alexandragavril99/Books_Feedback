@@ -7,4 +7,6 @@ router.post("/createBooks", checkAuthorization, bookController.createBooks);
 
 router.get("/getAllBooks", bookController.getAllBooks);
 
+router.get("/getBookById/:id", bookController.getBookById);
+
 module.exports = router;

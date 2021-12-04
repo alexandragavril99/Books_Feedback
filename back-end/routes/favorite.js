@@ -9,6 +9,12 @@ router.put(
   favoriteController.addBookToFavorites
 );
 
-router.put("/removeBookFromFavorites/:id", checkAuthorization, favoriteController.removeBookFromFavorites);
+router.put(
+  "/removeBookFromFavorites/:id",
+  checkAuthorization,
+  favoriteController.removeBookFromFavorites
+);
+
+router.get("/getFavoriteBooks/:id", favoriteController.getFavoriteBooks);
 
 module.exports = router;

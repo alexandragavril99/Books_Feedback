@@ -53,6 +53,17 @@ const controller = {
       res.status(500).send(err);
     }
   },
+
+  getUser: async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const user = (await db.collection("Users").doc(userId).get()).data();
+
+      res.status(200).send(user);
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  },
 };
 
 module.exports = controller;

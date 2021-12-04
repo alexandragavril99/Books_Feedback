@@ -58,6 +58,26 @@ const controller = {
       res.status(500).send(err);
     }
   },
+
+  getFavoriteBooks: async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const user = (await db.collection("Users").doc(userId).get()).data();
+
+      const bookList = [];
+      for (let item of user.favorites) {
+        const book = (await db.collection("Books").doc(item).get()).data();
+        bookList.push({
+          id: item,
+          data: book,
+        });
+      }
+
+      res.status(200).send(bookList);
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  },
 };
 
 module.exports = controller;

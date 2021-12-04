@@ -8,9 +8,9 @@
       :author="book.data.author"
       :price="book.data.price"
       :type="book.data.type"
+      :fav="false"
+      :addFav="true"
     />
-    <!-- <div v-for="book in books" :key="book.id">dc</div> -->
-    <!-- <div v-for="(ar, index) in arr" :key="index">ce</div> -->
   </div>
 </template>
 

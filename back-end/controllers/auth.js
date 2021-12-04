@@ -22,7 +22,11 @@ const controller = {
                   SECRET_KEY,
                   { expiresIn: "3h" }
                 );
-                res.status(200).send({ token: token, message: "Logged in." });
+                res.status(200).send({
+                  token: token,
+                  message: "Logged in.",
+                  id: doc.id,
+                });
               } else {
                 res.status(400).send({ message: "Wrong password." });
               }

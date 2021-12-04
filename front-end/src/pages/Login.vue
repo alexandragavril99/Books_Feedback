@@ -55,16 +55,15 @@ export default {
         )
         .then((res) => {
           $q.notify({
-            message: "Registration successfull",
+            message: "Login successfull",
             icon: "done",
             color: "green",
             textColor: "white",
           });
           console.log(res.data);
-          //    localStorage.setItem(res.data.token);
           localStorage.setItem("token", res.data.token);
+          localStorage.setItem("id", res.data.id);
           router.push({ path: "/books" });
-          //   router.go();
         })
         .catch((err) => {
           const errors = Object.values(err.response.data); //iau erorile din back
