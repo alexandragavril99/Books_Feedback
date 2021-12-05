@@ -2,7 +2,7 @@ const routes = [
   {
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
-    children: [{ path: "", component: () => import("pages/Index.vue") }],
+    children: [{ path: "", component: () => import("pages/Books.vue") }],
   },
   {
     path: "/register",
@@ -14,11 +14,11 @@ const routes = [
     component: () => import("layouts/MainLayout.vue"),
     children: [{ path: "", component: () => import("pages/Login.vue") }],
   },
-  {
-    path: "/books",
-    component: () => import("layouts/MainLayout.vue"),
-    children: [{ path: "", component: () => import("pages/Books.vue") }],
-  },
+  // {
+  //   path: "/books",
+  //   component: () => import("layouts/MainLayout.vue"),
+  //   children: [{ path: "", component: () => import("pages/Books.vue") }],
+  // },
   {
     path: "/feedback/:id",
     component: () => import("layouts/MainLayout.vue"),

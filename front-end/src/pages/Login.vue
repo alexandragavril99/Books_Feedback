@@ -2,6 +2,13 @@
   <div class="container">
     <div class="loginContainer">
       <q-form @submit="onSubmit">
+        <div class="imageContainer flex flex-center q-ma-md">
+          <img src="../../public/book.png" alt="Book Icon" />
+        </div>
+
+        <div class="text-h6 text-secondary" style="text-align: center">
+          Login
+        </div>
         <q-input
           v-model="email"
           label="Email"
@@ -63,7 +70,7 @@ export default {
           console.log(res.data);
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("id", res.data.id);
-          router.push({ path: "/books" });
+          router.push({ path: "/" });
         })
         .catch((err) => {
           const errors = Object.values(err.response.data); //iau erorile din back
@@ -98,10 +105,11 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid black;
   padding: 5% 3%;
   border-radius: 3%;
   border: 2px solid secondary;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
 
 .q-input {

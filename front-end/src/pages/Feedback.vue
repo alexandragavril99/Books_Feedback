@@ -1,5 +1,5 @@
 <template>
-  <div v-if="feedback" class="flex flex-center feedbackContainer">
+  <div v-if="feedback" class="feedbackContainer">
     <FeedbackCard
       :id="bookId"
       :title="book.title"
@@ -14,7 +14,7 @@
       <q-scroll-area
         :visible="true"
         class="shadow-2 rounded-borders qscroll"
-        style="height: 350px; width: 650px; background: white"
+        style=""
       >
         <div class="q-pa-md" v-if="feedback">
           <q-list v-for="item in feedback" :key="item.id">
@@ -28,7 +28,7 @@
               </q-item-section>
 
               <q-item-section side top>
-                <q-badge color="teal">{{ item.grade }}</q-badge>
+                <q-badge color="secondary">{{ item.grade }}</q-badge>
               </q-item-section>
               <q-item-section side bottom>
                 <q-btn
@@ -36,7 +36,7 @@
                   flat
                   round
                   icon="remove_circle_outline"
-                  color="teal"
+                  color="secondary"
                   @click="deleteFeedback(item.id)"
                 ></q-btn>
                 <q-btn
@@ -154,17 +154,55 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped lang="scss">
 .feedbackContainer {
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   min-height: 85vh;
-}
 
+  @media (max-width: 767px) {
+    flex-direction: column;
+  }
+
+  @media (max-width: 1023px) {
+    flex-direction: column;
+  }
+}
+/*
 .q-scrollarea__content {
   display: flex;
   align-items: center;
+}*/
+
+/* .qscroll {
+  height: 350px;
+  width: 100%;
+  background: white;
+}  */
+
+.scroll {
+  width: 60%;
+
+  & > .qscroll {
+    height: 275px;
+
+    @media (max-width: 767px) {
+      height: 300px;
+    }
+
+    @media (max-width: 1023px) {
+      height: 500px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    width: 100%;
+  }
+
+  @media (max-width: 1023px) {
+    width: 100%;
+  }
 }
 </style>

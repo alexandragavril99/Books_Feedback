@@ -1,12 +1,13 @@
 <template>
   <div class="q-pa-md">
     <q-card class="my-card bg-secondary text-white" style="text-align: center">
-      <q-card-section>
+      <q-card-section style="height: 48%">
+        <q-icon name="menu_book" align="left" style="font-size: 32px" />
         <div class="text-subtitle1 text-weight-medium">{{ title }}</div>
         <div class="text-subtitle2" align="right">{{ author }}</div>
       </q-card-section>
 
-      <q-card-section class="card-section">
+      <q-card-section class="card-section" style="height: 25%">
         <span> Type: {{ type }} </span>
         <br />
         <span> Price: {{ price }} lei </span>
@@ -14,7 +15,10 @@
 
       <q-separator dark />
 
-      <q-card-actions align="center" style="display: flex; flex-wrap: nowrap">
+      <q-card-actions
+        align="center"
+        style="display: flex; flex-wrap: nowrap; height: 25%"
+      >
         <q-btn flat @click="changePage()">View feedback</q-btn>
         <q-btn v-if="fav" flat @click="deleteFromFavorites()"
           >Delete from favorites</q-btn
@@ -97,7 +101,15 @@ export default defineComponent({
             });
           })
           .catch((err) => {
-            console.log(err);
+            const errors = Object.values(err.response.data); //iau erorile din back
+            errors.map((item) => {
+              $q.notify({
+                color: "red-9",
+                textColor: "white",
+                icon: "warning",
+                message: item,
+              });
+            });
           });
       } else {
         $q.notify({
@@ -141,7 +153,7 @@ export default defineComponent({
 .my-card {
   width: 100%;
   max-width: 275px;
-  height: 235px;
+  height: 275px;
 }
 
 .card-section {

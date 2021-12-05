@@ -17,6 +17,15 @@ const controller = {
           });
         });
 
+      for (let item of user.data.favorites) {
+        if (item == bookId) {
+          res
+            .status(400)
+            .send({ message: "Book already exists in favorites." });
+          return;
+        }
+      }
+
       let favorites =
         user.data.favorites !== undefined ? user.data.favorites : [];
       favorites.push(bookId);

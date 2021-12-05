@@ -37,16 +37,17 @@
 
     <div class="q-pa-md">
       <q-card class="my-card bg-secondary text-white">
-        <q-card-section>
+        <q-card-section style="text-align: center">
           <div class="text-h6">{{ title }}</div>
           <div class="text-subtitle2" align="right">{{ author }}</div>
         </q-card-section>
 
-        <q-card-section class="card-section">
+        <q-card-section
+          class="card-section flex flex-center"
+          style="flex-direction: column; gap: 8px"
+        >
           <span> Type: {{ type }} </span>
-          <br />
           <span> Price: {{ price }} lei </span>
-          <br />
           <span> Grade: {{ grade }}</span>
         </q-card-section>
 
@@ -130,7 +131,14 @@ export default defineComponent({
           });
           sendFeedback();
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          $q.notify({
+            message: err.response.data.message,
+            icon: "warning",
+            color: "red-8",
+            textColor: "white",
+          });
+        });
     }
 
     function addToFavorites() {
@@ -150,7 +158,12 @@ export default defineComponent({
             });
           })
           .catch((err) => {
-            console.log(err);
+            $q.notify({
+            message: err.response.data.message,
+            icon: "warning",
+            color: "red-8",
+            textColor: "white",
+          });
           });
       } else {
         $q.notify({

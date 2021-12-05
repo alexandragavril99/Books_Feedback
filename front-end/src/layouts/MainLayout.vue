@@ -8,21 +8,12 @@
         style="font-family: 'Montserrat', sans-serif"
       >
         <q-tab
-          name="home"
-          label="Home"
-          icon="home"
+          name="Books"
+          label="Books"
+          icon="library_books"
           class="tabsList"
           clickable
           @click="$router.push('/').catch((err) => {})"
-        />
-        <q-tab
-          v-if="!token"
-          name="Register"
-          label="Register"
-          icon="app_registration"
-          class="tabsList"
-          clickable
-          @click="$router.push('/register').catch((err) => {})"
         ></q-tab>
         <q-tab
           v-if="!token"
@@ -34,12 +25,13 @@
           @click="$router.push('/login').catch((err) => {})"
         ></q-tab>
         <q-tab
-          name="Books"
-          label="Books"
-          icon="library_books"
+          v-if="!token"
+          name="Register"
+          label="Register"
+          icon="app_registration"
           class="tabsList"
           clickable
-          @click="$router.push('/books').catch((err) => {})"
+          @click="$router.push('/register').catch((err) => {})"
         ></q-tab>
         <q-tab
           v-if="token"
@@ -69,7 +61,7 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, onBeforeUpdate, ref } from "vue";
 import { useRouter } from "vue-router";
 
 export default defineComponent({
@@ -77,21 +69,31 @@ export default defineComponent({
 
   setup() {
     const router = useRouter();
+    let tab = ref("");
+    console.log("HERE");
+    let token = ref(localStorage.getItem("token") ? true : false);
 
     function logout() {
       localStorage.clear();
       router.push({ path: "/login" });
     }
+    onBeforeUpdate(() => {
+      console.log("onbefore");
+      token.value = localStorage.getItem("token") ? true : false;
+    });
+
     return {
+      tab,
       logout,
       router,
+      token,
     };
   },
 
-  computed: {
-    token() {
-      return window.localStorage.getItem("token");
-    },
-  },
+  // computed: {
+  //   token() {
+  //     return window.localStorage.getItem("token");
+  //   },
+  // },
 });
 </script>

@@ -1,7 +1,14 @@
 <template>
-  <div class="container">
+  <div class="container q-pa-lg">
     <div class="registerContainer">
       <q-form @submit="onSubmit">
+        <div class="imageContainer flex flex-center q-ma-md">
+          <img src="../../public/book.png" alt="Book Icon" />
+        </div>
+
+        <div class="text-h6 text-secondary" style="text-align: center">
+          Register
+        </div>
         <q-input
           v-model="firstName"
           label="First Name"
@@ -111,10 +118,11 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid black;
   padding: 3%;
   border-radius: 3%;
   border: 2px solid secondary;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
 
 .q-input {
